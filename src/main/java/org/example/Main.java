@@ -51,8 +51,12 @@ public class Main {
         // qr with image
         // creates the new qr code and buffers it into the BufferedImage variable qrCodeImage
 
+        /*
+         The Map,EncodeHintType> makes a far more detailed QR code quality
+         ErrorCorrectionLevel. (H)igh (M)edium (L)ow useful for QR's with added graphics provides
+         different levels of correction
+         */
 
-        // This makes a far more detailed QR code quality
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 
@@ -63,14 +67,17 @@ public class Main {
 
             try {
                 bitMatrix = qrCodeWriter.encode(webpage, BarcodeFormat.QR_CODE, 1000, 1000, hints);
-            } catch (WriterException ex) {
-                //throw new RuntimeException(ex);
-                System.out.println("Error encoding the new QR code" + ex.getMessage());
+            } catch (WriterException e) {
+
+                System.out.println("Error encoding the new QR code" + e.getMessage());
             }
             assert bitMatrix != null;
             BufferedImage qrCodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
-            // load the logo for the qr
+            
+            /*
+            try block inserts a small logo into the center of the QR logoImage
+             */
             try {
                 BufferedImage logoImage = ImageIO.read(new File(logoPath));
                 int deltaHeight = qrCodeImage.getHeight() - logoImage.getHeight();
@@ -85,9 +92,9 @@ public class Main {
                 ImageIO.write(qrCodeImage, "png", new File(path));
 
                 System.out.println("QR with Image created successfully");
-            } catch (IOException ex) {
-                //throw new RuntimeException(ex);
-                System.out.println("Error generating the QR with Image " + ex.getMessage());
+
+            } catch (IOException e) {
+                System.out.println("Error generating the QR with Image " + e.getMessage());
             }
 
         }
